@@ -1,11 +1,10 @@
 import requests
-import json
 
 url = 'https://offerup.com/api/graphql'
 
-delivery_flag = 'p'
-distance = 5
-query_value = 'Jordan 4'
+delivery_flag = 'p_s' # local = p, shipping = s, local + shipping = p_s
+distance = 50
+query_value = 'Nike Air Force 1'
 zip_code = '02108'
 
 payload = {"operationName":"GetModularFeed","variables":{"debug":False,"searchParams":[{"key":"DELIVERY_FLAGS","value":f"{delivery_flag}"},{"key":"DISTANCE","value":f"{distance}"},{"key":"q","value":f"{query_value}"},{"key":"platform","value":"web"},{"key":"zipcode","value":f"{zip_code}"},{"key":"experiment_id","value":"experimentmodel24"},{"key":"limit","value":"50"},{"key":"searchSessionId","value":"38b6cc92-8ec1-473c-ab26-72cca971b7a7"}]},
@@ -25,6 +24,17 @@ response = requests.post(url, headers=headers, json=payload)
 
 if response.status_code == 200:
     data = response.json()
-    print(json.dumps(data, indent=2))
 else:
     print("Failed to fetch data:", response.status_code)
+
+data = data['data']['modularFeed']['looseTiles']
+
+for i in data:
+    if 'listing' in i:
+        url = i["listing"]["listingId"]
+        imageUrl = i['listing']['image']['url']
+        location = i['listing']['locationName']
+        price = i['listing']['price']
+        title = i['listing']['title']
+
+        print(f'{title}, {price}, {location}')
