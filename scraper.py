@@ -57,15 +57,18 @@ with open('locations.txt', 'r') as f, open('sneakers.txt', 'r') as sneakers_file
                         price = i['listing']['price']
                         title = i['listing']['title']
 
-                        results_df = results_df.append({
+                        new_row = {
                             'Title': title,
                             'Price': price,
                             'Location': location,
                             'URL': url,
                             'Image URL': imageUrl
-                        }, ignore_index=True)
+                        }
 
-                        print('.', flush=True)
+                        print(new_row)
 
-results_df.to_csv('output.csv', index=False)
+                        results_df = pd.concat([results_df, pd.DataFrame([new_row])], ignore_index=True)
+                        results_df.to_csv('output.csv', mode='a', header=False, index=False)
+
+                print('.', flush=True)
 
