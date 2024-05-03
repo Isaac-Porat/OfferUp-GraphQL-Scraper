@@ -1,13 +1,15 @@
 import requests
 import uuid
 import pandas as pd
+import time
 
 scraping_url = 'https://offerup.com/api/graphql'
 
-results_df = pd.DataFrame(columns=['Title', 'Price', 'Location', 'URL', 'Image URL'])
-
 with open('locations.txt', 'r') as f, open('sneakers.txt', 'r') as sneakers_file:
     sneakers = [sneaker.strip() for sneaker in sneakers_file.readlines()]
+
+    start_time = time.time()
+
     for line in f.readlines():
         locations = line.strip().split(',')
         if len(locations) >= 3:
@@ -20,6 +22,8 @@ with open('locations.txt', 'r') as f, open('sneakers.txt', 'r') as sneakers_file
                 distance = 50 # 5, 10, 15, 20, 25, 30, 50
                 query_value = sneaker
                 zip_code = zip_code
+
+                results_df = pd.DataFrame(columns=['Title', 'Price', 'Location', 'URL', 'Image URL'])
 
                 search_session_id = str(uuid.uuid4())
                 print(f"UUID: {search_session_id}")
@@ -67,8 +71,12 @@ with open('locations.txt', 'r') as f, open('sneakers.txt', 'r') as sneakers_file
 
                         print(new_row)
 
-                        results_df = pd.concat([results_df, pd.DataFrame([new_row])], ignore_index=True)
-                        results_df.to_csv('output.csv', mode='a', header=False, index=False)
+                state_file = f'output/{state}.csv'
+                results_df.to_csv(state_file, mode='w', header=True, index=False)
 
                 print('.', flush=True)
 
+
+
+    end_time = time.time()
+    print(f"Scraping ended at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}")
