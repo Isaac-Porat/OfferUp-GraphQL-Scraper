@@ -1,2 +1,4 @@
+- [ ] Compare scraped OfferUp and eBay shoe price data to StockX and Goat shoe data price
+- [ ] Create algorithm that determines the score of the sneaker 
 - [ ] How can I scrape more data?
 - [ ] MongoDB database structure?
