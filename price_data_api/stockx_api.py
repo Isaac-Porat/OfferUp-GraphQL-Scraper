@@ -1,7 +1,8 @@
 import requests
+import json
 
-def search(query):
-  url = f'https://stockx.com/api/browse?_search={query}'
+def stockx_api_search(query, size):
+  url = f'https://stockx.com/api/browse?_search={query}?size={size}'
 
   headers = {
     'authority': 'stockx.com',
@@ -28,6 +29,6 @@ def search(query):
 
   response = requests.get(url=url, headers=headers)
 
-  print(response.text)
+  return json.loads(response.text)
 
-search('jordan')
+print(stockx_api_search('air-jordan-4-retro-military-blue-2024', '10'))
